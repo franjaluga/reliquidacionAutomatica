@@ -44,11 +44,6 @@ public class Testing {
         int[] resultados2 = {res1b,res2b,res3b,res4b,res5b,res6b,res7b,res8b};
         int[] resultados3 = {res1c,res2c,res3c,res4c,res5c,res6c,res7c,res8c};
 
-        boolean flag1 = false;
-        boolean flag2 = false;
-        boolean flag3 = false;
-
-
         for(int i = 0; i <8; i++){
             //System.out.println(Funciones.calcularIGCAt2022(bases[i]) + "=" + resultados1[i] + (Funciones.calcularIGCAt2022(bases[i]) == resultados1[i] ));
             if(!(Funciones.calcularIGCAt2022(bases[i]) == resultados1[i] )){
