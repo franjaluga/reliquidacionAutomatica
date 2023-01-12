@@ -1,4 +1,4 @@
-public enum Tasas2022 {
+public enum Tasas2021 {
     TASA_1(0.000f),
     TASA_2(0.040f),
     TASA_3(0.080f),
@@ -10,7 +10,7 @@ public enum Tasas2022 {
 
     private final float tasa;
 
-    private Tasas2022(float tasa){
+    private Tasas2021(float tasa){
         this.tasa = tasa;
     }
 
