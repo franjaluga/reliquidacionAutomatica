@@ -1,6 +1,10 @@
 public class Libro {
     int base = 0;
     float porcentajeDeParticipacion = 0.00f;
+    int baseProporcional = 0;
+
+    int utmTG = 0;
+    double baseProporcionalEnUtm = 0;
     int periodosAReliquidar = 0;
     int yearTG = 0;
     int yearInit = 0;
@@ -24,6 +28,30 @@ public class Libro {
 
     public float getPorcentajeDeParticipacion() {
         return porcentajeDeParticipacion;
+    }
+
+    public int getBaseProporcional() {
+        return baseProporcional;
+    }
+
+    public double getBaseProporcionalEnUtm() {
+        return baseProporcionalEnUtm;
+    }
+
+    public void setBaseProporcionalEnUtm(double baseProporcionalEnUtm) {
+        this.baseProporcionalEnUtm = baseProporcionalEnUtm;
+    }
+
+    public int getUtmTG() {
+        return utmTG;
+    }
+
+    public void setUtmTG(int utmTG) {
+        this.utmTG = utmTG;
+    }
+
+    public void setBaseProporcional(int baseProporcional) {
+        this.baseProporcional = baseProporcional;
     }
 
     public int getYearTG() {

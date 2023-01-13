@@ -62,7 +62,7 @@ public class Core {
                     case4(libro);
                     break;
                 case 5:
-                    case5();
+                    case5(libro);
                     break;
                 default:
                     System.out.println("Vuelva a ingresar una opción válida");
@@ -89,6 +89,9 @@ public class Core {
 
         libro.setPorcentajeDeParticipacion(subConsoleUserMenuResponse);
         System.out.println("Ingresó el siguiente decimal: " + libro.getPorcentajeDeParticipacion());
+
+        libro.setBaseProporcional( (int) (libro.getBase() * libro.getPorcentajeDeParticipacion()));
+        System.out.println("Su proporción es "+libro.getBase()+" x "+libro.getPorcentajeDeParticipacion()+" = "+libro.getBaseProporcional());
     }
 
     public void case3(Libro libro){
@@ -156,9 +159,11 @@ public class Core {
 
     }
 
-    public void case5(){
+    public void case5(Libro libro){
         System.out.println("Reporte final de reliquidación");
         // TODO proceso 4 : Reliquidar bases
+
+        System.out.println("UTM a la fecha de TG: " + baseToUtmInDateTg(libro));
 
         /*
             3. La base de TG se convierte (aquella porción que me corresponde) a UTM, desde la fecha del TG
@@ -170,8 +175,86 @@ public class Core {
          */
 
 
+
     }
 
     // OTRAS FUNCIONES, LA IDEA ES NO ANIDAR MÁS ELEMENTOS
 
+    public double baseToUtmInDateTg(Libro libro){
+
+        selectorDeUtm(libro);
+        double basePp = libro.getBaseProporcional();
+        double utmTg = libro.getUtmTG();
+
+        libro.setBaseProporcionalEnUtm( basePp / utmTg );
+
+        double utmTgReturn = libro.getBaseProporcionalEnUtm();
+
+        return utmTgReturn;
+    }
+
+    public void selectorDeUtm(Libro libro){
+         int yearTg = libro.getYearTG();
+
+         switch (yearTg){
+             case 2022:
+                 System.out.println("case 2022");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2022.getUtm());
+                 break;
+
+             case 2021:
+                 System.out.println("case 2021");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2021.getUtm());
+                 break;
+
+             case 2020:
+                 System.out.println("case 2020");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2020.getUtm());
+                 break;
+
+             case 2019:
+                 System.out.println("case 2019");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2019.getUtm());
+                 break;
+
+             case 2018:
+                 System.out.println("case 2018");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2018.getUtm());
+                 break;
+
+             case 2017:
+                 System.out.println("case 2017");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2017.getUtm());
+                 break;
+
+             case 2016:
+                 System.out.println("case 2016");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2016.getUtm());
+                 break;
+
+             case 2015:
+                 System.out.println("case 2015");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2015.getUtm());
+                 break;
+
+             case 2014:
+                 System.out.println("case 2014");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2014.getUtm());
+                 break;
+
+             case 2013:
+                 System.out.println("case 2013");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2013.getUtm());
+                 break;
+
+             case 2012:
+                 System.out.println("case 2012");
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2012.getUtm());
+                 break;
+
+             default:
+                 System.out.println("case default");
+                 break;
+         }
+    }
 }
