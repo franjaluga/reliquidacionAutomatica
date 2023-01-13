@@ -168,11 +168,11 @@ public class Core {
         // inicializa base recalculada
         libro.resetBasesRecalculadas();
 
-        // cuantas UTM son por año?
-        howMuchUtmIsPerYear(libro);
-
         // 3. La base de TG se convierte (aquella porción que me corresponde) a UTM, desde la fecha del TG
         System.out.println("Base a UTM a la fecha del TG: " + baseToUtmInDateTg(libro));
+
+        // cuantas UTM son por año?
+        howMuchUtmIsPerYear(libro);
 
         // 4. Las UTMS/años reliqu. , se devengan parceladamente en cada año anterior "SE RETROTRAEN" a sus valores UTM de cierre de dicho año al cierre
         addUtmToBaseRecalc(libro);
@@ -182,19 +182,16 @@ public class Core {
             // necesitamos el IGC nuevo
 
             // pasar "BASE" + AÑO y calcular IGC
-
-
+        asignarIgcRespectivoViaYearAndBase(libro);
 
         // 6. Se obtiene una diferencia histórica, por año, de la diferencia entre las bases
             // necesitamos su difrencia
+        diferenciaDeIgc(libro);
+
+        // 7. Se lleva a la UTM actual y se suman todas para obtener la reliquidación
 
 
-
-        /*
-            7. Se lleva a la UTM actual y se suman todas para obtener la reliquidación
-            8. Compone la sumatoria del punto 7, y se resta al % del crédito que le corresponde, solo aquel CD va a devolución, lo demás se pierde
-         */
-
+        // 8. Compone la sumatoria del punto 7, y se resta al % del crédito que le corresponde, solo aquel CD va a devolución, lo demás se pierde
 
 
     }
@@ -390,4 +387,162 @@ public class Core {
         System.out.println(libro.baseRecalculada[9][0] + " : "+ libro.baseRecalculada[9][1]);
     }
 
+    public void asignarIgcRespectivoViaYearAndBase(Libro libro){
+
+        int y1a = libro.basesAntiguas[0][1];
+        int y2a = libro.basesAntiguas[1][1];
+        int y3a = libro.basesAntiguas[2][1];
+        int y4a = libro.basesAntiguas[3][1];
+        int y5a = libro.basesAntiguas[4][1];
+        int y6a = libro.basesAntiguas[5][1];
+        int y7a = libro.basesAntiguas[6][1];
+        int y8a = libro.basesAntiguas[7][1];
+        int y9a = libro.basesAntiguas[8][1];
+        int y10a = libro.basesAntiguas[9][1];
+
+        int b1a = libro.basesAntiguas[0][0];
+        int b2a = libro.basesAntiguas[1][0];
+        int b3a = libro.basesAntiguas[2][0];
+        int b4a = libro.basesAntiguas[3][0];
+        int b5a = libro.basesAntiguas[4][0];
+        int b6a = libro.basesAntiguas[5][0];
+        int b7a = libro.basesAntiguas[6][0];
+        int b8a = libro.basesAntiguas[7][0];
+        int b9a = libro.basesAntiguas[8][0];
+        int b10a = libro.basesAntiguas[9][0];
+
+
+        int y1n = libro.baseRecalculada[0][1];
+        int y2n = libro.baseRecalculada[1][1];
+        int y3n = libro.baseRecalculada[2][1];
+        int y4n = libro.baseRecalculada[3][1];
+        int y5n = libro.baseRecalculada[4][1];
+        int y6n = libro.baseRecalculada[5][1];
+        int y7n = libro.baseRecalculada[6][1];
+        int y8n = libro.baseRecalculada[7][1];
+        int y9n = libro.baseRecalculada[8][1];
+        int y10n = libro.baseRecalculada[9][1];
+
+        int b1n = libro.baseRecalculada[0][0];
+        int b2n = libro.baseRecalculada[1][0];
+        int b3n = libro.baseRecalculada[2][0];
+        int b4n = libro.baseRecalculada[3][0];
+        int b5n = libro.baseRecalculada[4][0];
+        int b6n = libro.baseRecalculada[5][0];
+        int b7n = libro.baseRecalculada[6][0];
+        int b8n = libro.baseRecalculada[7][0];
+        int b9n = libro.baseRecalculada[8][0];
+        int b10n = libro.baseRecalculada[9][0];
+
+        libro.igcHistoricoYRecalculado[0][0] = calcularIgc(y1a,b1a);
+        libro.igcHistoricoYRecalculado[1][0] = calcularIgc(y2a,b2a);
+        libro.igcHistoricoYRecalculado[2][0] = calcularIgc(y3a,b3a);
+        libro.igcHistoricoYRecalculado[3][0] = calcularIgc(y4a,b4a);
+        libro.igcHistoricoYRecalculado[4][0] = calcularIgc(y5a,b5a);
+        libro.igcHistoricoYRecalculado[5][0] = calcularIgc(y6a,b6a);
+        libro.igcHistoricoYRecalculado[6][0] = calcularIgc(y7a,b7a);
+        libro.igcHistoricoYRecalculado[7][0] = calcularIgc(y8a,b8a);
+        libro.igcHistoricoYRecalculado[8][0] = calcularIgc(y9a,b9a);
+        libro.igcHistoricoYRecalculado[9][0] = calcularIgc(y10a,b10a);
+
+        libro.igcHistoricoYRecalculado[0][1] = calcularIgc(y1n,b1n);
+        libro.igcHistoricoYRecalculado[1][1] = calcularIgc(y2n,b2n);
+        libro.igcHistoricoYRecalculado[2][1] = calcularIgc(y3n,b3n);
+        libro.igcHistoricoYRecalculado[3][1] = calcularIgc(y4n,b4n);
+        libro.igcHistoricoYRecalculado[4][1] = calcularIgc(y5n,b5n);
+        libro.igcHistoricoYRecalculado[5][1] = calcularIgc(y6n,b6n);
+        libro.igcHistoricoYRecalculado[6][1] = calcularIgc(y7n,b7n);
+        libro.igcHistoricoYRecalculado[7][1] = calcularIgc(y8n,b8n);
+        libro.igcHistoricoYRecalculado[8][1] = calcularIgc(y9n,b9n);
+        libro.igcHistoricoYRecalculado[9][1] = calcularIgc(y10n,b10n);
+
+        System.out.println(libro.igcHistoricoYRecalculado[0][0] + " -> " + libro.igcHistoricoYRecalculado[0][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[1][0] + " -> " + libro.igcHistoricoYRecalculado[1][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[2][0] + " -> " + libro.igcHistoricoYRecalculado[2][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[3][0] + " -> " + libro.igcHistoricoYRecalculado[3][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[4][0] + " -> " + libro.igcHistoricoYRecalculado[4][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[5][0] + " -> " + libro.igcHistoricoYRecalculado[5][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[6][0] + " -> " + libro.igcHistoricoYRecalculado[6][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[7][0] + " -> " + libro.igcHistoricoYRecalculado[7][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[8][0] + " -> " + libro.igcHistoricoYRecalculado[8][1]);
+        System.out.println(libro.igcHistoricoYRecalculado[9][0] + " -> " + libro.igcHistoricoYRecalculado[9][1]);
+    }
+
+    public int calcularIgc(int year, int base){
+        int igc = 0;
+
+        if(year == 2012){
+            System.out.println(2012);
+            igc = Funciones.calcularIGCAt2012(base);
+        }else if(year == 2013){
+            System.out.println(2013);
+            igc = Funciones.calcularIGCAt2013(base);
+        }else if(year == 2014){
+            System.out.println(2014);
+            igc = Funciones.calcularIGCAt2014(base);
+        }else if(year == 2015){
+            System.out.println(2015);
+            igc = Funciones.calcularIGCAt2015(base);
+        }else if(year == 2016){
+            System.out.println(2016);
+            igc = Funciones.calcularIGCAt2016(base);
+        }else if(year == 2017){
+            System.out.println(2017);
+            igc = Funciones.calcularIGCAt2017(base);
+        }else if(year == 2018){
+            System.out.println(2018);
+            igc = Funciones.calcularIGCAt2018(base);
+        }else if(year == 2019){
+            System.out.println(2019);
+            igc = Funciones.calcularIGCAt2019(base);
+        }else if(year == 2020){
+            System.out.println(2020);
+            igc = Funciones.calcularIGCAt2020(base);
+        }else if(year == 2021){
+            System.out.println(2021);
+            igc = Funciones.calcularIGCAt2021(base);
+        }else if(year == 2022){
+            System.out.println(2022);
+            igc = Funciones.calcularIGCAt2022(base);
+        }
+        return igc;
+    }
+
+    public void diferenciaDeIgc(Libro libro){
+
+        int slot1 = libro.igcHistoricoYRecalculado[0][1] - libro.igcHistoricoYRecalculado[0][0];
+        int slot2 = libro.igcHistoricoYRecalculado[1][1] - libro.igcHistoricoYRecalculado[1][0];
+        int slot3 = libro.igcHistoricoYRecalculado[2][1] - libro.igcHistoricoYRecalculado[2][0];
+        int slot4 = libro.igcHistoricoYRecalculado[3][1] - libro.igcHistoricoYRecalculado[3][0];
+        int slot5 = libro.igcHistoricoYRecalculado[4][1] - libro.igcHistoricoYRecalculado[4][0];
+        int slot6 = libro.igcHistoricoYRecalculado[5][1] - libro.igcHistoricoYRecalculado[5][0];
+        int slot7 = libro.igcHistoricoYRecalculado[6][1] - libro.igcHistoricoYRecalculado[6][0];
+        int slot8 = libro.igcHistoricoYRecalculado[7][1] - libro.igcHistoricoYRecalculado[7][0];
+        int slot9 = libro.igcHistoricoYRecalculado[8][1] - libro.igcHistoricoYRecalculado[8][0];
+        int slot10 =  libro.igcHistoricoYRecalculado[9][1] - libro.igcHistoricoYRecalculado[9][0];
+
+        libro.diferenciaDeBases[0] = slot1;
+        libro.diferenciaDeBases[1] = slot2;
+        libro.diferenciaDeBases[2] = slot3;
+        libro.diferenciaDeBases[3] = slot4;
+        libro.diferenciaDeBases[4] = slot5;
+        libro.diferenciaDeBases[5] = slot6;
+        libro.diferenciaDeBases[6] = slot7;
+        libro.diferenciaDeBases[7] = slot8;
+        libro.diferenciaDeBases[8] = slot9;
+        libro.diferenciaDeBases[9] = slot10;
+
+        System.out.println("======== Diferencia===========");
+        System.out.println(libro.diferenciaDeBases[0]);
+        System.out.println(libro.diferenciaDeBases[1]);
+        System.out.println(libro.diferenciaDeBases[2]);
+        System.out.println(libro.diferenciaDeBases[3]);
+        System.out.println(libro.diferenciaDeBases[4]);
+        System.out.println(libro.diferenciaDeBases[5]);
+        System.out.println(libro.diferenciaDeBases[6]);
+        System.out.println(libro.diferenciaDeBases[7]);
+        System.out.println(libro.diferenciaDeBases[8]);
+        System.out.println(libro.diferenciaDeBases[9]);
+
+    }
 }
