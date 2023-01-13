@@ -529,6 +529,54 @@ public class Funciones {
         return igc;
     }
 
+    public static int calcularIGCAt2011(int base){
+
+        int t_1Superior = Tramos2011.TRAMO_1_SUPERIOR.getTramo();
+        int t_2Superior = Tramos2011.TRAMO_2_SUPERIOR.getTramo();
+        int t_3Superior = Tramos2011.TRAMO_3_SUPERIOR.getTramo();
+        int t_4Superior = Tramos2011.TRAMO_4_SUPERIOR.getTramo();
+        int t_5Superior = Tramos2011.TRAMO_5_SUPERIOR.getTramo();
+        int t_6Superior = Tramos2011.TRAMO_6_SUPERIOR.getTramo();
+        int t_7Superior = Tramos2011.TRAMO_7_SUPERIOR.getTramo();
+
+        float t1_tasa = Tasas2011.TASA_1.getTasa();
+        float t2_tasa = Tasas2011.TASA_2.getTasa();
+        float t3_tasa = Tasas2011.TASA_3.getTasa();
+        float t4_tasa = Tasas2011.TASA_4.getTasa();
+        float t5_tasa = Tasas2011.TASA_5.getTasa();
+        float t6_tasa = Tasas2011.TASA_6.getTasa();
+        float t7_tasa = Tasas2011.TASA_7.getTasa();
+        float t8_tasa = Tasas2011.TASA_8.getTasa();
+
+        double t1_rebaja = Rebajas2011.REBAJA_TRAMO_1.getRebaja();
+        double t2_rebaja = Rebajas2011.REBAJA_TRAMO_2.getRebaja();
+        double t3_rebaja = Rebajas2011.REBAJA_TRAMO_3.getRebaja();
+        double t4_rebaja = Rebajas2011.REBAJA_TRAMO_4.getRebaja();
+        double t5_rebaja = Rebajas2011.REBAJA_TRAMO_5.getRebaja();
+        double t6_rebaja = Rebajas2011.REBAJA_TRAMO_6.getRebaja();
+        double t7_rebaja = Rebajas2011.REBAJA_TRAMO_7.getRebaja();
+        double t8_rebaja = Rebajas2011.REBAJA_TRAMO_8.getRebaja();
+
+        int[] tramos = {t_1Superior,t_2Superior,t_3Superior,t_4Superior,t_5Superior,t_6Superior,t_7Superior};
+        float[] tasas = {t1_tasa,t2_tasa,t3_tasa,t4_tasa,t5_tasa,t6_tasa,t7_tasa,t8_tasa};
+        double[] rebajas = {t1_rebaja,t2_rebaja,t3_rebaja,t4_rebaja,t5_rebaja,t6_rebaja,t7_rebaja,t8_rebaja};
+
+        DataYear $2011 = new DataYear();
+
+        $2011.setTramos(tramos);
+        $2011.setTasas(tasas);
+        $2011.setRebajas(rebajas);
+
+
+        int[] trSuperior = $2011.getTramos();
+        float[] tasa = $2011.getTasas();
+        double[] rebaja = $2011.getRebajas();
+
+        int igc = calcularGlobal(base, trSuperior, tasa, rebaja);
+
+        return igc;
+    }
+
     public static int calcularGlobal(int base, int[] tramoSuperior, float[] tasa, double[] rebaja){
 
         int igc = 0;
@@ -561,27 +609,35 @@ public class Funciones {
 
         if( base >= 0 && base <= t1Superior ){
             igc = (int) Math.round((base * tasa1) - rebaja1);
+            System.out.println(base +";"+ tasa1+";"+ rebaja1+";"+igc);
 
         }else if( base > t1Superior && base <= t2Superior){
             igc = (int) Math.round((base * tasa2) - rebaja2);
+            System.out.println(base +";"+ tasa2+";"+ rebaja2+";"+igc);
 
         }else if( base > t2Superior && base <= t3Superior){
             igc = (int) Math.round((base * tasa3) - rebaja3);
+            System.out.println(base +";"+ tasa3+";"+ rebaja3+";"+igc);
 
         }else if( base > t3Superior && base <= t4Superior){
             igc = (int) Math.round((base * tasa4) - rebaja4);
+            System.out.println(base +";"+ tasa4+";"+ rebaja4+";"+igc);
 
         }else if( base > t4Superior && base <= t5Superior){
             igc = (int) Math.round((base * tasa5) - rebaja5);
+            System.out.println(base +";"+ tasa5+";"+ rebaja5+";"+igc);
 
         }else if( base > t5Superior && base <= t6Superior){
             igc = (int) Math.round((base * tasa6) - rebaja6);
+            System.out.println(base +";"+ tasa6+";"+ rebaja6+";"+igc);
 
         }else if( base > t6Superior && base <= t7Superior){
             igc = (int) Math.round((base * tasa7) - rebaja7);
+            System.out.println(base +";"+ tasa7+";"+ rebaja7+";"+igc);
 
         }else if( base > t7Superior){
             igc = (int) Math.round((base * tasa8) - rebaja8);
+            System.out.println(base +";"+ tasa8+";"+ rebaja8+";"+igc);
 
         }
         return igc;

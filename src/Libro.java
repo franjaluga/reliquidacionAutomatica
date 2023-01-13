@@ -15,7 +15,7 @@ public class Libro {
 
     int[] diferenciaDeBases = new int[10];
 
-    int[] diferenciaDeBasesEnUTMdelYear = new int[10];
+    int[] diferenciaDeBasesToUtmYearTG = new int[10];
 
     public void setBase(int base){
         this.base = base;

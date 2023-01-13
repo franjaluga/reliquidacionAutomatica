@@ -9,7 +9,9 @@ public enum UnidadesTributariasMensuales {
     UTM_DIC_2015( 44955),
     UTM_DIC_2014( 43198),
     UTM_DIC_2013( 40772),
-    UTM_DIC_2012(40206);
+    UTM_DIC_2012(40206),
+    UTM_DIC_2011(39021),
+    UTM_DIC_2010(36863);
 
     private final int utm;
 

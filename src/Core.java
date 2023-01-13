@@ -98,20 +98,23 @@ public class Core {
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
 
-        System.out.println("Ingrese el año de termino de giro: ");
+        System.out.println("Ingrese el año TRIBUTARIO de termino de giro: ");
         int actualYear = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
         libro.setYearTG(actualYear);
 
-        System.out.println("Ingrese el año en que adquirió las acciones o derechos");
+        System.out.println("Ingrese el año COMERCIAL en que adquirió las acciones o derechos");
         int initialYear = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
-        libro.setYearInit(initialYear);
+        libro.setYearInit( initialYear + 1 );
 
-        System.out.println("Entonces, inició en "+initialYear+" y está haciendo TG en "+actualYear);
+        System.out.println("se ocupará año tributario inicial: " + libro.getYearInit());
+        System.out.println("se ocupará año tributario final: " + libro.getYearTG());
+
+        System.out.println("Entonces, inició en "+initialYear+" y está haciendo TG en "+actualYear + "(Cerrando al 31.12."+(actualYear-1)+")");
 
 
         int yearsToReliq = 0;
 
-        if( ( (actualYear-1) - (initialYear) ) > 10 ){
+        if( ( ( actualYear - 1 ) - ( initialYear + 1 ) ) > 10 ){
             yearsToReliq = 10;
         }else{
             yearsToReliq = (actualYear-1) - (initialYear) + 1;
@@ -137,7 +140,6 @@ public class Core {
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
 
-        //int[][] bases = new int[libro.getPeriodosAReliquidar()][2];
         int[][] bases = new int[10][2];
 
         for(int i = 0; i < libro.getPeriodosAReliquidar(); i++ ){
@@ -202,7 +204,9 @@ public class Core {
 
         selectorDeUtm(libro);
         double basePp = libro.getBaseProporcional();
-        double utmTg = libro.getUtmTG();
+
+        // TODO BORRAR LA LINEA DE ABAJO Y REMPLAZARA POR ESTA ---> double utmTg = libro.getUtmTG();
+        double utmTg = 52842;
 
         libro.setBaseProporcionalEnUtm( basePp / utmTg );
 
@@ -260,10 +264,15 @@ public class Core {
                  libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2012.getUtm());
                  break;
 
+             case 2011:
+                 libro.setUtmTG(UnidadesTributariasMensuales.UTM_DIC_2011.getUtm());
+                 break;
+
              default:
                  System.out.println("case default");
                  break;
          }
+        System.out.println("SE USÓ UTM DE ---->" + libro.getUtmTG());
     }
 
 
@@ -307,68 +316,98 @@ public class Core {
         int slot = data;
         double convertido = 0;
 
+        if(slot == 2011){
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2010.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
+            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
+            libro.baseRecalculada[lugar][1] = 2011;
+        }
+
         if(slot == 2012){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2011.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2012;
         }
 
         if(slot == 2013){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2013;
         }
 
         if(slot == 2014){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2014;
         }
 
         if(slot == 2015){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2015;
         }
 
         if(slot == 2016){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2016;
         }
 
         if(slot == 2017){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2017;
         }
 
         if(slot == 2018){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2018;
         }
 
         if(slot == 2019){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2019;
         }
 
         if(slot == 2020){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2020;
         }
 
         if(slot == 2021){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2021;
         }
 
         if(slot == 2022){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2022.getUtm();
+            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
+            convertido = Math.round(convertido);
+            System.out.println("convertido = " + convertido);
             libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
             libro.baseRecalculada[lugar][1] = 2022;
         }
@@ -471,7 +510,10 @@ public class Core {
     public int calcularIgc(int year, int base){
         int igc = 0;
 
-        if(year == 2012){
+        if(year == 2011){
+            System.out.println(2011);
+            igc = Funciones.calcularIGCAt2011(base);
+        }else if(year == 2012){
             System.out.println(2012);
             igc = Funciones.calcularIGCAt2012(base);
         }else if(year == 2013){
