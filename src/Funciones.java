@@ -47,8 +47,6 @@ public class Funciones {
         return igc;
     }
 
-
-
     public static int calcularIGCAt2021(int base){
 
         int t_1Superior = Tramos2021.TRAMO_1_SUPERIOR.getTramo();
