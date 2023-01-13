@@ -1,5 +1,4 @@
 public class Funciones {
-
     public static int calcularIGCAt2022(int base){
 
         int t_1Superior = Tramos2022.TRAMO_1_SUPERIOR.getTramo();
@@ -641,7 +640,7 @@ public class Funciones {
 
         }
         return igc;
-
     }
-
 }
+
+

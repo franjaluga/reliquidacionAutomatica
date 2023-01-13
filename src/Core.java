@@ -192,6 +192,59 @@ public class Core {
 
         // 7. Se lleva a la UTM actual y se suman todas para obtener la reliquidación
 
+        // TODO: OCUPAR DEL ARRAY INICIAL LOS AÑOS INVOLUCRADOS --> basesAntiguas[i][0]
+        // TODO: Pedir la UTM en base al año que reciba
+        // TODO: OCUPAR EL ARRAY DE LAS DIFERENCIAS EN PESOS --> diferenciaDeBases[i]
+        // TODO: PROCESAR Y GUARDAR EN difIgcEnUtmHistorica[i]
+
+
+        libro.difIgcEnUtmHistorica[0] = libro.diferenciaDeBases[0] / whatUtmIs(libro.basesAntiguas[0][1]);
+        libro.difIgcEnUtmHistorica[1] = libro.diferenciaDeBases[1] / whatUtmIs(libro.basesAntiguas[1][1]);
+        libro.difIgcEnUtmHistorica[2] = libro.diferenciaDeBases[2] / whatUtmIs(libro.basesAntiguas[2][1]);
+        libro.difIgcEnUtmHistorica[3] = libro.diferenciaDeBases[3] / whatUtmIs(libro.basesAntiguas[3][1]);
+        libro.difIgcEnUtmHistorica[4] = libro.diferenciaDeBases[4] / whatUtmIs(libro.basesAntiguas[4][1]);
+        libro.difIgcEnUtmHistorica[5] = libro.diferenciaDeBases[5] / whatUtmIs(libro.basesAntiguas[5][1]);
+        libro.difIgcEnUtmHistorica[6] = libro.diferenciaDeBases[6] / whatUtmIs(libro.basesAntiguas[6][1]);
+        libro.difIgcEnUtmHistorica[7] = libro.diferenciaDeBases[7] / whatUtmIs(libro.basesAntiguas[7][1]);
+        libro.difIgcEnUtmHistorica[8] = libro.diferenciaDeBases[8] / whatUtmIs(libro.basesAntiguas[8][1]);
+        libro.difIgcEnUtmHistorica[9] = libro.diferenciaDeBases[9] / whatUtmIs(libro.basesAntiguas[9][1]);
+
+        System.out.println("=====DIFERENCIAS EN UTM HISTORICAS======");
+        System.out.println(libro.difIgcEnUtmHistorica[0]);
+        System.out.println(libro.difIgcEnUtmHistorica[1]);
+        System.out.println(libro.difIgcEnUtmHistorica[2]);
+        System.out.println(libro.difIgcEnUtmHistorica[3]);
+        System.out.println(libro.difIgcEnUtmHistorica[4]);
+        System.out.println(libro.difIgcEnUtmHistorica[5]);
+        System.out.println(libro.difIgcEnUtmHistorica[6]);
+        System.out.println(libro.difIgcEnUtmHistorica[7]);
+        System.out.println(libro.difIgcEnUtmHistorica[8]);
+        System.out.println(libro.difIgcEnUtmHistorica[9]);
+
+        // TODO CONVERTIR A UTM DE TG
+
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[0] = libro.difIgcEnUtmHistorica[0] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[1] = libro.difIgcEnUtmHistorica[1] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[2] = libro.difIgcEnUtmHistorica[2] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[3] = libro.difIgcEnUtmHistorica[3] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[4] = libro.difIgcEnUtmHistorica[4] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[5] = libro.difIgcEnUtmHistorica[5] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[6] = libro.difIgcEnUtmHistorica[6] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[7] = libro.difIgcEnUtmHistorica[7] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[8] = libro.difIgcEnUtmHistorica[8] * libro.getUtmTG();
+        libro.difIgcEnUtmHistoricaAPesosActualesTG[9] = libro.difIgcEnUtmHistorica[9] * libro.getUtmTG();
+
+
+
+        // TODO: APLICAR SUMATORIA VERTICAL A [X+2]
+
+        int sumatoria = 0;
+
+        for(int i = 0; i < libro.difIgcEnUtmHistoricaAPesosActualesTG.length; i++){
+            sumatoria += libro.difIgcEnUtmHistoricaAPesosActualesTG[i];
+        }
+
+        System.out.println("sumatoria reliquidación: " + sumatoria);
 
         // 8. Compone la sumatoria del punto 7, y se resta al % del crédito que le corresponde, solo aquel CD va a devolución, lo demás se pierde
 
@@ -585,6 +638,51 @@ public class Core {
         System.out.println(libro.diferenciaDeBases[7]);
         System.out.println(libro.diferenciaDeBases[8]);
         System.out.println(libro.diferenciaDeBases[9]);
-
     }
+
+    public double whatUtmIs(int data){
+        int utmCorrecta = 1;
+
+        if(data != 0 ){
+            if(data == 2011){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2010.getUtm();
+            }
+            if(data == 2012){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2011.getUtm();
+            }
+            if(data == 2013){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
+            }
+            if(data == 2014){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
+            }
+            if(data == 2015){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
+            }
+            if(data == 2016){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
+            }
+            if(data == 2017){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
+            }
+            if(data == 2018){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
+            }
+            if(data == 2019){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
+            }
+            if(data == 2020){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
+            }
+            if(data == 2021){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
+            }
+            if(data == 2022){
+                utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
+            }
+        }
+
+        return utmCorrecta;
+    }
+
 }
