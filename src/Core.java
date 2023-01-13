@@ -258,8 +258,10 @@ public class Core {
         selectorDeUtm(libro);
         double basePp = libro.getBaseProporcional();
 
-        // TODO BORRAR LA LINEA DE ABAJO Y REMPLAZARA POR ESTA ---> double utmTg = libro.getUtmTG();
-        double utmTg = 52842;
+        double utmTg = libro.getUtmTG();
+        // TODO : para revisar con el ejercicio del profe double utmTg = 52842;
+        // TODO : para revisar con el ejercicio del s.i.i double utmTg = 54171;
+
 
         libro.setBaseProporcionalEnUtm( basePp / utmTg );
 
