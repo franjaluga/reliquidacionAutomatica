@@ -5,6 +5,7 @@ public class BaseGeneral {
     float porcentajeDeParticipacion;
     int baseProporcional;
     int UtmTg;
+    double baseproporcionalEnClp;
     double baseProporcionalEnUtm;
     int tgMonth;
     int tgYear;
@@ -13,11 +14,13 @@ public class BaseGeneral {
     int yearsMaxToReliq;
     int yearsToReliq;
 
+
     public BaseGeneral() {
         this.base = 0;
         this.porcentajeDeParticipacion = 0;
         this.baseProporcional = 0;
         this.UtmTg = 0;
+        this.baseproporcionalEnClp = 0;
         this.baseProporcionalEnUtm = 0;
         this.tgMonth = 0;
         this.tgYear = 0;
@@ -41,6 +44,14 @@ public class BaseGeneral {
 
     public void setPorcentajeDeParticipacion(float porcentajeDeParticipacion) {
         this.porcentajeDeParticipacion = porcentajeDeParticipacion;
+    }
+
+    public double getBaseproporcionalEnClp() {
+        return baseproporcionalEnClp;
+    }
+
+    public void setBaseproporcionalEnClp(double baseproporcionalEnClp) {
+        this.baseproporcionalEnClp = baseproporcionalEnClp;
     }
 
     public int getBaseProporcional() {
