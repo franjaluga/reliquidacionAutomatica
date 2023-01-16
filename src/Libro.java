@@ -4,10 +4,14 @@ public class Libro {
     int baseProporcional = 0;
     int utmTG = 0;
     double baseProporcionalEnUtm = 0;
+
+
     int periodosAReliquidar = 0;
     int yearTG = 0;
     int yearInit = 0;
     double basePorYearToReliq = 0;
+
+
     int[][] basesAntiguas = new int [10][2];
     int[][] baseRecalculada = new int [10][2];
 
@@ -18,6 +22,13 @@ public class Libro {
     double[] difIgcEnUtmHistorica = new double[10];
 
     double[] difIgcEnUtmHistoricaAPesosActualesTG = new double[10];
+
+
+
+
+
+
+
 
     public void setBase(int base){
         this.base = base;

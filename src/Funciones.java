@@ -1,4 +1,7 @@
+import com.franjaluga.reliquidacionautomatica.constantes.*;
+
 public class Funciones {
+
     public static int calcularIGCAt2022(int base){
 
         int t_1Superior = Tramos2022.TRAMO_1_SUPERIOR.getTramo();

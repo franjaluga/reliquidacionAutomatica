@@ -1,62 +1,49 @@
+import com.franjaluga.reliquidacionautomatica.constantes.UnidadesTributariasMensuales;
+
 import java.util.Scanner;
 
 public class Core {
-    /*
-
-
-        0. Ingresar la base e impuesto de termino de giro y sacar el % de socio o accionistas
-        // TODO proceso 1 :  Ingresar la base de TG a reliquidar
-        // TODO proceso 2 : Ingresar participación del socio o accionista (int), en la base
-
-        1. ver la cantidad de años en los que fui dueño, hasta un máximo de 10 años
-        2. No se cuenta como año, el año del TG, para efectos del punto 1
-        // TODO proceso 3 : Ingresar periodos a reliquida
-        // TODO proceso 4: conforme a los periodos a reliquidar, pedir las bases
-
-        // TODO proceso 4 : Reliquidar bases
-        3. La base de TG se convierte (aquella porción que me corresponde) a UTM, desde la fecha del TG
-        4. Las UTMS/años reliqu. , se devengan parceladamente en cada año anterior "SE RETROTRAEN" a sus valores UTM de cierre de dicho año al cierre
-        5. Recalculamos el IGC por año (anteriores), sin perder la huella anterior
-        6. Se obtiene una diferencia histórica, por año, de la diferencia entre las bases
-        7. Se lleva a la UTM actual y se suman todas para obtener la reliquidación
-        8. Compone la sumatoria del punto 7, y se resta al % del crédito que le corresponde, solo aquel CD va a devolución, lo demás se pierde
-    */
-
 
     public void runCore(){
 
-        Libro libro = new Libro();
+        mainLoop();
 
-        Scanner scanConsoleUserResponse = new Scanner(System.in);
-        int consoleUserMenuResponse;
+    }
 
+    public void mainLoop(){
+
+        boolean exit = false;
 
         do {
-            System.out.println("========== INICIO ==========");
-            System.out.println("1....Ingresar base de TG a reliquidar");
-            System.out.println("2....Ingresar participación del socio o accionista, en la base");
-            System.out.println("3....Ingresar periodos a reliquidar");
-            System.out.println("4....Ingresar bases IGC por año");
-            System.out.println("5....Reliquidar bases");
-            System.out.println("0....Salir de la aplicación");
 
+            printMenu();
+
+            Scanner scanConsoleUserResponse = new Scanner(System.in);
+            int consoleUserMenuResponse;
             consoleUserMenuResponse = Integer.parseInt(scanConsoleUserResponse.nextLine());
+
+            // TODO: Agregar las BasePerYear
+
+            // TODO: Reemplazar hacia...
+            BaseGeneral baseGeneral = new BaseGeneral();
+
+            // TODO: proveniente de...
+            Libro libro = new Libro();
+
 
             switch (consoleUserMenuResponse) {
                 case 0:
-                    System.out.println("Ha salido de la aplicación");
+                    printOption0();
+                    exit = true;
                     break;
                 case 1:
-                    System.out.println("Ingrese base de TG de la empresa (corresponde al 100%)");
-                    case1(libro);
+                    case1(baseGeneral);
                     break;
                 case 2:
-                    System.out.println("Ingrese el porcentaje de participación del socio o accionista"+
-                            "\nPor ejemplo: 40% debe anotarlo como 0.40");
-                    case2(libro);
+                    case2(baseGeneral);
                     break;
                 case 3:
-                    case3(libro);
+                    case3(baseGeneral);
                     break;
                 case 4:
                     case4(libro);
@@ -68,72 +55,114 @@ public class Core {
                     System.out.println("Vuelva a ingresar una opción válida");
                     break;
             }
-        } while (consoleUserMenuResponse != 0);
-
+        } while (exit != true);
     }
 
-    public void case1(Libro libro){
 
+    public void printMenu(){
+        System.out.println("========== INICIO ==========\n"+
+                "1....Ingresar base de TG a reliquidar\n"+
+                "2....Ingresar participación del socio o accionista, en la base\n"+
+                "3....Ingresar periodos a reliquidar\n"+
+                "4....Ingresar bases IGC por año\n"+
+                "5....Reliquidar bases\n"+
+                "0....Salir de la aplicación\n");
+    }
+
+    public void printOption0(){
+        System.out.println("Ha salido de la aplicación");
+    }
+
+    public void printOption1(){
+        System.out.println("Ingrese base de TG de la empresa (corresponde al 100%)");
+    }
+
+    public void printOption2(){
+        System.out.println("Ingrese el porcentaje de participación del socio o accionista"+
+                "\nPor ejemplo: 40% debe anotarlo como 0.40");
+    }
+
+    public void case1(BaseGeneral baseGeneral){
+        printOption1();
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
         int subConsoleUserMenuResponse = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
 
-        libro.setBase(subConsoleUserMenuResponse);
-        System.out.println("Ingresó una base: " + libro.getBase());
+        baseGeneral.setBase(subConsoleUserMenuResponse);
+        System.out.println("Ingresó una base: " + baseGeneral.getBase());
 
     }
 
-    public void case2(Libro libro){
+
+    // TODO: DEPURAR
+
+    public void case2(BaseGeneral baseGeneral){
+        printOption2();
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
         float subConsoleUserMenuResponse = Float.parseFloat(scanSubConsoleUserResponse.nextLine());
 
-        libro.setPorcentajeDeParticipacion(subConsoleUserMenuResponse);
-        System.out.println("Ingresó el siguiente decimal: " + libro.getPorcentajeDeParticipacion());
+        baseGeneral.setPorcentajeDeParticipacion(subConsoleUserMenuResponse);
+        System.out.println("Ingresó el siguiente decimal: " + baseGeneral.getPorcentajeDeParticipacion());
 
-        libro.setBaseProporcional( (int) (libro.getBase() * libro.getPorcentajeDeParticipacion()));
-        System.out.println("Su proporción es "+libro.getBase()+" x "+libro.getPorcentajeDeParticipacion()+" = "+libro.getBaseProporcional());
+        System.out.println(baseGeneral.getBase());
+        System.out.println(baseGeneral.getBaseProporcional());
+
+        /*
+
+        baseGeneral.setBaseProporcional( (int) ( baseGeneral.getBase() * baseGeneral.getPorcentajeDeParticipacion() ) );
+        System.out.println("Su proporción es " + baseGeneral.getBase() + " x " + baseGeneral.getPorcentajeDeParticipacion() + " = " + baseGeneral.getBaseProporcional());
+        */
     }
 
-    public void case3(Libro libro){
+    public void case3(BaseGeneral baseGeneral){
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
 
-        System.out.println("Ingrese el año TRIBUTARIO de termino de giro: ");
-        int actualYear = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
-        libro.setYearTG(actualYear);
+        System.out.println("Ingrese el 'MES' de TERMINO DE GIRO: ");
+        baseGeneral.setTgMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
-        System.out.println("Ingrese el año COMERCIAL en que adquirió las acciones o derechos");
-        int initialYear = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
-        libro.setYearInit( initialYear + 1 );
+        System.out.println("Ingrese el 'AÑO TRIBUTARIO' de TERMINO DE GIRO: ");
+        baseGeneral.setTgYear( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
-        System.out.println("se ocupará año tributario inicial: " + libro.getYearInit());
-        System.out.println("se ocupará año tributario final: " + libro.getYearTG());
+        System.out.println("Ingrese el 'MES' en que ADQUIRIÓ las acciones o derechos: ");
+        baseGeneral.setInitMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
-        System.out.println("Entonces, inició en "+initialYear+" y está haciendo TG en "+actualYear + "(Cerrando al 31.12."+(actualYear-1)+")");
+        System.out.println("Ingrese el 'AÑO COMERCIAL' en que ADQUIRIÓ las acciones o derechos:");
+        baseGeneral.setInitYear( Integer.parseInt(scanSubConsoleUserResponse.nextLine()) + 1 );
 
+        System.out.println("|---------------------------------------|");
+        System.out.println("| se ocupará mes/año (inicial): " + baseGeneral.getInitMonth() + "/" + baseGeneral.getInitYear() + "|");
+        System.out.println("| se ocupará mes/año (final)  : " + baseGeneral.getTgMonth() + "/" + baseGeneral.getTgYear() + "|");
+        System.out.println("|---------------------------------------|");
 
-        int yearsToReliq = 0;
+        // TODO: REFACTORIZAR
 
-        if( ( ( actualYear - 1 ) - ( initialYear + 1 ) ) > 10 ){
-            yearsToReliq = 10;
+        if( ( ( baseGeneral.getTgYear() - 1 ) - ( baseGeneral.getInitYear() + 1 ) ) > 10 ){
+            baseGeneral.setYearsMaxToReliq(10);
         }else{
-            yearsToReliq = (actualYear-1) - (initialYear) + 1;
+            baseGeneral.setYearsMaxToReliq( ( baseGeneral.getTgYear() -1 ) - (baseGeneral.getInitYear()) + 1 );
         }
 
-        System.out.println("Eso significa que puedes reliquidar en: "+yearsToReliq + " años como máximo");
+        System.out.println("Eso significa que puedes reliquidar en: " + baseGeneral.getYearsMaxToReliq() + " años como máximo");
+        System.out.println("Entonces, ¿en cuantos años quieres reliquidar?: ");
 
-        System.out.println("Entonces, ¿en cuantos años quieres reliquidar?, máximo: " + yearsToReliq);
+        int tryYearsToReliq = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
 
-        int finalYearsToReliq = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
+        if( tryYearsToReliq > 0 && tryYearsToReliq <= baseGeneral.getYearsMaxToReliq() ){
 
-        if(finalYearsToReliq > 0 && finalYearsToReliq <= yearsToReliq){
-            libro.setPeriodosAReliquidar(finalYearsToReliq);
-            System.out.println("Ingresó "+ libro.getPeriodosAReliquidar() + " años a reliquidar");
+            baseGeneral.setYearsToReliq(tryYearsToReliq);
+            System.out.println("Ingresó "+ baseGeneral.getYearsToReliq() + " años a reliquidar");
 
         }else{
             System.out.println("No ingresó un dato válido");
         }
+
     }
+
+
+
+    // TODO: DESDE AQUI HACIA ABAJO, DEBE REFACTORIZAR EN LAS CLASES NUEVAS
+
 
     public void case4(Libro libro){
         libro.resetBasesAntiguas();
