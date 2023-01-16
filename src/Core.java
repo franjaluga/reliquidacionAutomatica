@@ -11,7 +11,10 @@ public class Core {
         // TODO: Reemplazar hacia...
         BaseGeneral baseGeneral = new BaseGeneral();
         BaseYear baseYearAntigua = new BaseYear();
-        BaseYear baseYearRecalculada = new BaseYear();
+        BaseYear aditionByYearInUtm = new BaseYear();
+        BaseYear aditionByYearInClp = new BaseYear();
+        BaseYear baseYearNueva = new BaseYear();
+
 
         // TODO: proveniente de...
         Libro libro = new Libro();
@@ -38,10 +41,13 @@ public class Core {
                     case3(baseGeneral);
                     break;
                 case 4:
-                    case4(baseGeneral,baseYearAntigua);
+                    case4(baseGeneral, baseYearAntigua);
                     break;
                 case 5:
-                    case5(baseGeneral,baseYearRecalculada);
+                    case5(baseGeneral,
+                            aditionByYearInUtm,
+                            aditionByYearInClp,
+                            baseYearNueva);
                     break;
                 default:
                     System.out.println("Vuelva a ingresar una opción válida");
@@ -71,6 +77,10 @@ public class Core {
     public void printOption2(){
         System.out.println("Ingrese el porcentaje de participación del socio o accionista"+
                 "\nPor ejemplo: 40% debe anotarlo como 0.40");
+    }
+
+    public void printOption5(){
+        System.out.println("Reporte final de reliquidación");
     }
 
     public void case1(BaseGeneral baseGeneral){
@@ -188,9 +198,12 @@ public class Core {
     // TODO: DESDE AQUI HACIA ABAJO, DEBE REFACTORIZAR EN LAS CLASES NUEVAS
 
 
-    public void case5(BaseGeneral baseGeneral, BaseYear baseYearRecalculada){
+    public void case5(BaseGeneral baseGeneral,
+                      BaseYear aditionByYearInUtm,
+                      BaseYear aditionByYearInClp,
+                      BaseYear baseYearNueva){
 
-        System.out.println("Reporte final de reliquidación");
+        printOption5();
 
         // 3. La base de TG se convierte (aquella porción que me corresponde) a UTM, desde la fecha del TG
 
@@ -200,14 +213,20 @@ public class Core {
         howMuchUtmIsPerYear( baseGeneral );
 
 
+        // 4. Las UTMS/años reliqu. , se devengan parceladamente en cada año anterior "SE RETROTRAEN" a sus valores UTM de cierre de dicho año al cierre
+
+        // TODO: Dividir el trabajo:
+        // 1. Agregar en 'aditionByYearInUtm', las valorizaciones a UTM asociado a su año
+        // 2. Generar el nuevo array 'aditionByYearInClp' recibiendo las UTM de 'aditionByYearInUtm' y convirtiéndolas a peso
+        // 3. Una vez tenga 'aditionByYearInClp', sumar en el nuevo array ''
+
+
+        addUtmToBaseRecalc( baseGeneral, baseYearAntigua, baseYearAntiguaPlusUtmInCLPOfYear );
 
 
         /****
          *
 
-
-         // 4. Las UTMS/años reliqu. , se devengan parceladamente en cada año anterior "SE RETROTRAEN" a sus valores UTM de cierre de dicho año al cierre
-         addUtmToBaseRecalc( baseGeneral );
 
 
         // 5. Recalculamos el IGC por año, sin perder la huella anterior
@@ -286,15 +305,13 @@ public class Core {
     }
 
 
-
-    // OTRAS FUNCIONES, LA IDEA ES NO ANIDAR MÁS ELEMENTOS
-
     public double baseToUtmInDateTg(BaseGeneral baseGeneral){
 
         selectorDeUtm( baseGeneral );
         double basePp = baseGeneral.getBaseProporcional();
 
-        double utmTg = baseGeneral.getUtmTg();
+        //double utmTg = baseGeneral.getUtmTg();
+        double utmTg = 52842;
         // TODO : para revisar con el ejercicio del profe double utmTg = 52842;
         // TODO : para revisar con el ejercicio del s.i.i double utmTg = 54171;
 
@@ -369,151 +386,118 @@ public class Core {
     public void howMuchUtmIsPerYear(BaseGeneral baseGeneral){
         // visualizar cuanto queda por año
         double basePorYearToReliq = baseToUtmInDateTg( baseGeneral ) / baseGeneral.getYearsToReliq();
+
         baseGeneral.setBaseproporcionalEnClp( basePorYearToReliq );
+
         System.out.println("Entonces, por año serían: " + basePorYearToReliq );
     }
 
 
-    public void addUtmToBaseRecalc(Libro libro){
+    public void addUtmToBaseRecalc(BaseGeneral baseGeneral,
+                                   BaseYear baseYearAntigua,
+                                   BaseYear baseYearAntiguaPlusUtmInCLPOfYear){
 
-        int slot1 = libro.basesAntiguas[0][1];
-        int slot2 = libro.basesAntiguas[1][1];
-        int slot3 = libro.basesAntiguas[2][1];
-        int slot4 = libro.basesAntiguas[3][1];
-        int slot5 = libro.basesAntiguas[4][1];
-        int slot6 = libro.basesAntiguas[5][1];
-        int slot7 = libro.basesAntiguas[6][1];
-        int slot8 = libro.basesAntiguas[7][1];
-        int slot9 = libro.basesAntiguas[8][1];
-        int slot10 = libro.basesAntiguas[9][1];
+        for(int i = 0; i <10; i++){
 
-        evaluarYearInitial(slot1, libro, 0);
-        evaluarYearInitial(slot2, libro, 1);
-        evaluarYearInitial(slot3, libro, 2);
-        evaluarYearInitial(slot4, libro, 3);
-        evaluarYearInitial(slot5, libro, 4);
-        evaluarYearInitial(slot6, libro, 5);
-        evaluarYearInitial(slot7, libro, 6);
-        evaluarYearInitial(slot8, libro, 7);
-        evaluarYearInitial(slot9, libro, 8);
-        evaluarYearInitial(slot10, libro, 9);
-
-        printDataRecalc(libro);
+            evaluarYearInitial( baseGeneral,
+                                baseYearAntigua,
+                                baseYearAntiguaPlusUtmInCLPOfYear,
+                                i);
+        }
 
     }
 
-    public void evaluarYearInitial(int data, Libro libro, int lugar){
-        int slot = data;
+
+    public void evaluarYearInitial(BaseGeneral baseGeneral,
+                                   BaseYear baseYearAntigua,
+                                   BaseYear baseYearAntiguaPlusUtmInCLPOfYear,
+                                   int indice){
+
+        for(int i = 0; i < 10; i++){
+            int yeartoValidate = baseYearAntigua.getBySlot( i , 1 );
+            comprobar( yeartoValidate , baseGeneral, baseYearAntiguaPlusUtmInCLPOfYear, baseYearAntigua, i);
+        }
+
+        System.out.println( baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 0, 0 ) +" , "+ baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 0 , 1 ));
+        System.out.println( baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 1, 0 ) +" , "+ baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 1 , 1 ));
+        System.out.println( baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 2, 0 ) +" , "+ baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( 2 , 1 ));
+
+
+    }
+
+
+    public void comprobar( int year,
+                           BaseGeneral baseGeneral,
+                           BaseYear baseYearAntiguaPlusUtmInCLPOfYear,
+                           BaseYear baseYearAntigua,
+                           int i){
+
         double convertido = 0;
 
-        if(slot == 2011){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2010.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2011;
+        if(year == 2011){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2010.getUtm();
         }
 
-        if(slot == 2012){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2011.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2012;
+        if(year == 2012){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2011.getUtm();
         }
 
-        if(slot == 2013){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2013;
+        if(year == 2013){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
         }
 
-        if(slot == 2014){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2014;
+        if(year == 2014){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
         }
 
-        if(slot == 2015){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2015;
+        if(year == 2015){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
         }
 
-        if(slot == 2016){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2016;
+        if(year == 2016){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
         }
 
-        if(slot == 2017){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2017;
+        if(year == 2017){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
         }
 
-        if(slot == 2018){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2018;
+        if(year == 2018){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
         }
 
-        if(slot == 2019){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2019;
+        if(year == 2019){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
         }
 
-        if(slot == 2020){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2020;
+        if(year == 2020){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
         }
 
-        if(slot == 2021){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2021;
+        if(year == 2021){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
         }
 
-        if(slot == 2022){
-            convertido = libro.getBasePorYearToReliq() * UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
-            convertido = Math.round(convertido);
-            System.out.println("convertido = " + convertido);
-            libro.baseRecalculada[lugar][0] = libro.basesAntiguas[lugar][0] + (int) (convertido);
-            libro.baseRecalculada[lugar][1] = 2022;
+        if(year == 2022){
+            convertido = baseGeneral.getBaseProporcionalEnUtm() * UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
         }
+
+        convertido = Math.round(convertido);
+        System.out.println("convertido, " + year + "->" +  convertido);
+
+        baseYearAntiguaPlusUtmInCLPOfYear.setBySlot(i, 0, baseYearAntigua.getBySlot(i,0) + (int) (convertido));
+        baseYearAntiguaPlusUtmInCLPOfYear.setBySlot(i, 1, year);
+
     }
 
-    public void printDataRecalc(Libro libro){
-        System.out.println(libro.baseRecalculada[0][0] + " : "+ libro.baseRecalculada[0][1]);
-        System.out.println(libro.baseRecalculada[1][0] + " : "+ libro.baseRecalculada[1][1]);
-        System.out.println(libro.baseRecalculada[2][0] + " : "+ libro.baseRecalculada[2][1]);
-        System.out.println(libro.baseRecalculada[3][0] + " : "+ libro.baseRecalculada[3][1]);
-        System.out.println(libro.baseRecalculada[4][0] + " : "+ libro.baseRecalculada[4][1]);
-        System.out.println(libro.baseRecalculada[5][0] + " : "+ libro.baseRecalculada[5][1]);
-        System.out.println(libro.baseRecalculada[6][0] + " : "+ libro.baseRecalculada[6][1]);
-        System.out.println(libro.baseRecalculada[7][0] + " : "+ libro.baseRecalculada[7][1]);
-        System.out.println(libro.baseRecalculada[8][0] + " : "+ libro.baseRecalculada[8][1]);
-        System.out.println(libro.baseRecalculada[9][0] + " : "+ libro.baseRecalculada[9][1]);
+
+
+    public void printDataRecalc(BaseYear baseYearAntiguaPlusUtmInCLPOfYear){
+        for( int i = 0; i < 10; i++){
+            System.out.println( baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( i , 0 ) + ";" +  baseYearAntiguaPlusUtmInCLPOfYear.getBySlot( i , 1 ) );
+        }
+
+
     }
 
     public void asignarIgcRespectivoViaYearAndBase(Libro libro){
