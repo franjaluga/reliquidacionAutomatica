@@ -6,7 +6,6 @@ public class BaseGeneral {
     int baseProporcional;
     int UtmTg;
     double baseProporcionalEnUtm;
-
     int tgMonth;
     int tgYear;
     int initMonth;
@@ -50,6 +49,22 @@ public class BaseGeneral {
 
     public void setBaseProporcional(int baseProporcional) {
         this.baseProporcional = baseProporcional;
+    }
+
+    public int getUtmTg() {
+        return UtmTg;
+    }
+
+    public void setUtmTg(int utmTg) {
+        UtmTg = utmTg;
+    }
+
+    public double getBaseProporcionalEnUtm() {
+        return baseProporcionalEnUtm;
+    }
+
+    public void setBaseProporcionalEnUtm(double baseProporcionalEnUtm) {
+        this.baseProporcionalEnUtm = baseProporcionalEnUtm;
     }
 
     public int getTgMonth() {

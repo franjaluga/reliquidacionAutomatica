@@ -6,30 +6,21 @@ public class Core {
 
     public void runCore(){
 
-        mainLoop();
-
-    }
-
-    public void mainLoop(){
-
         boolean exit = false;
 
+        // TODO: Reemplazar hacia...
+        BaseGeneral baseGeneral = new BaseGeneral();
+        BaseYear baseYear = new BaseYear();
+
+        // TODO: proveniente de...
+        Libro libro = new Libro();
+
         do {
-
             printMenu();
-
             Scanner scanConsoleUserResponse = new Scanner(System.in);
             int consoleUserMenuResponse;
+
             consoleUserMenuResponse = Integer.parseInt(scanConsoleUserResponse.nextLine());
-
-            // TODO: Agregar las BasePerYear
-
-            // TODO: Reemplazar hacia...
-            BaseGeneral baseGeneral = new BaseGeneral();
-
-            // TODO: proveniente de...
-            Libro libro = new Libro();
-
 
             switch (consoleUserMenuResponse) {
                 case 0:
@@ -46,7 +37,7 @@ public class Core {
                     case3(baseGeneral);
                     break;
                 case 4:
-                    case4(libro);
+                    case4(baseGeneral,baseYear);
                     break;
                 case 5:
                     case5(libro);
@@ -57,7 +48,6 @@ public class Core {
             }
         } while (exit != true);
     }
-
 
     public void printMenu(){
         System.out.println("========== INICIO ==========\n"+
@@ -92,9 +82,6 @@ public class Core {
 
     }
 
-
-    // TODO: DEPURAR
-
     public void case2(BaseGeneral baseGeneral){
         printOption2();
 
@@ -104,43 +91,43 @@ public class Core {
         baseGeneral.setPorcentajeDeParticipacion(subConsoleUserMenuResponse);
         System.out.println("Ingresó el siguiente decimal: " + baseGeneral.getPorcentajeDeParticipacion());
 
-        System.out.println(baseGeneral.getBase());
-        System.out.println(baseGeneral.getBaseProporcional());
-
-        /*
-
         baseGeneral.setBaseProporcional( (int) ( baseGeneral.getBase() * baseGeneral.getPorcentajeDeParticipacion() ) );
+
         System.out.println("Su proporción es " + baseGeneral.getBase() + " x " + baseGeneral.getPorcentajeDeParticipacion() + " = " + baseGeneral.getBaseProporcional());
-        */
+
     }
 
     public void case3(BaseGeneral baseGeneral){
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
 
-        System.out.println("Ingrese el 'MES' de TERMINO DE GIRO: ");
+        System.out.println("Ingrese el 'MES' de TERMINO DE GIRO\n (Ejemplo: Enero : 1 ; Febrero : 2, Diciembre: 12");
         baseGeneral.setTgMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
         System.out.println("Ingrese el 'AÑO TRIBUTARIO' de TERMINO DE GIRO: ");
         baseGeneral.setTgYear( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
-        System.out.println("Ingrese el 'MES' en que ADQUIRIÓ las acciones o derechos: ");
+        System.out.println("Ingrese el 'MES' en que ADQUIRIÓ las acciones o derechos\n (Ejemplo: Enero : 1 ; Febrero : 2, Diciembre: 12");
         baseGeneral.setInitMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
         System.out.println("Ingrese el 'AÑO COMERCIAL' en que ADQUIRIÓ las acciones o derechos:");
         baseGeneral.setInitYear( Integer.parseInt(scanSubConsoleUserResponse.nextLine()) + 1 );
 
         System.out.println("|---------------------------------------|");
-        System.out.println("| se ocupará mes/año (inicial): " + baseGeneral.getInitMonth() + "/" + baseGeneral.getInitYear() + "|");
-        System.out.println("| se ocupará mes/año (final)  : " + baseGeneral.getTgMonth() + "/" + baseGeneral.getTgYear() + "|");
+        System.out.println("  se ocupará mes/año (inicial): " + baseGeneral.getInitMonth() + "/" + baseGeneral.getInitYear() );
+        System.out.println("  se ocupará mes/año (final)  : " + baseGeneral.getTgMonth() + "/" + baseGeneral.getTgYear() );
         System.out.println("|---------------------------------------|");
 
-        // TODO: REFACTORIZAR
 
         if( ( ( baseGeneral.getTgYear() - 1 ) - ( baseGeneral.getInitYear() + 1 ) ) > 10 ){
             baseGeneral.setYearsMaxToReliq(10);
+            baseGeneral.setInitYear(baseGeneral.getTgYear()-10);
         }else{
             baseGeneral.setYearsMaxToReliq( ( baseGeneral.getTgYear() -1 ) - (baseGeneral.getInitYear()) + 1 );
+        }
+
+        if(baseGeneral.getYearsMaxToReliq() <= 0){
+            baseGeneral.setYearsMaxToReliq(0);
         }
 
         System.out.println("Eso significa que puedes reliquidar en: " + baseGeneral.getYearsMaxToReliq() + " años como máximo");
@@ -149,12 +136,40 @@ public class Core {
         int tryYearsToReliq = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
 
         if( tryYearsToReliq > 0 && tryYearsToReliq <= baseGeneral.getYearsMaxToReliq() ){
-
             baseGeneral.setYearsToReliq(tryYearsToReliq);
-            System.out.println("Ingresó "+ baseGeneral.getYearsToReliq() + " años a reliquidar");
-
         }else{
             System.out.println("No ingresó un dato válido");
+        }
+
+        System.out.println("Ingresó "+ baseGeneral.getYearsToReliq() + " años a reliquidar");
+
+    }
+
+
+    public void case4(BaseGeneral baseGeneral, BaseYear baseYear){
+
+        Scanner scanSubConsoleUserResponse = new Scanner(System.in);
+
+        int data = 0;
+
+        for(int i = 0; i < baseGeneral.getYearsToReliq() ; i++ ){
+
+            System.out.println("Ingrese Base imponible año: "+ ( baseGeneral.getInitYear() + i ) );
+
+            data =  Integer.parseInt( scanSubConsoleUserResponse.nextLine() );
+
+            baseYear.setBySlot( i , 0 , data );
+            baseYear.setBySlot( i , 1 , baseGeneral.getInitYear() + i );
+
+            System.out.println("Ingresó:"+
+                    baseYear.getBySlot( i , 0 )+"\n"+
+                    baseYear.getBySlot( i ,1));
+        }
+
+        System.out.println("Se trabajarán con las siguientes bases por año");
+
+        for( int i = 0; i < 10; i++){
+            System.out.println( baseYear.getBySlot( i , 0 ) + ";" +  baseYear.getBySlot( i , 1 ) );
         }
 
     }
@@ -163,34 +178,6 @@ public class Core {
 
     // TODO: DESDE AQUI HACIA ABAJO, DEBE REFACTORIZAR EN LAS CLASES NUEVAS
 
-
-    public void case4(Libro libro){
-        libro.resetBasesAntiguas();
-
-        Scanner scanSubConsoleUserResponse = new Scanner(System.in);
-
-        int[][] bases = new int[10][2];
-
-        for(int i = 0; i < libro.getPeriodosAReliquidar(); i++ ){
-
-            System.out.println("Ingrese Base imponible año: "+ (libro.getYearInit()+i));
-
-            bases[i][0] = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
-            bases[i][1] = libro.getYearInit() + i;
-            System.out.println("Ingresó: " +  bases[i][0] + "En el año "+ bases[i][1]);
-
-        }
-
-        libro.setBasesAntiguas(bases);
-
-        System.out.println("Se trabajarán con las siguientes bases por año");
-
-        for(int i = 0; i < libro.basesAntiguas.length; i++){
-            System.out.println(libro.basesAntiguas[i][1]+ " : " + libro.basesAntiguas[i][0]);
-        }
-
-
-    }
 
     public void case5(Libro libro){
         System.out.println("Reporte final de reliquidación");
