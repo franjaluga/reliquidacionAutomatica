@@ -1,7 +1,6 @@
 import com.franjaluga.reliquidacionautomatica.constantes.UnidadesTributariasMensuales;
 import com.franjaluga.reliquidacionautomatica.helpers.Texts;
 
-import javax.sound.midi.Soundbank;
 import java.util.Scanner;
 
 public class Core {
@@ -23,9 +22,6 @@ public class Core {
 
         BaseYear ActualValueFinalInClp = new BaseYear();
 
-
-        // TODO: proveniente de...
-        Libro libro = new Libro();
 
         do {
             Texts.printMenu();
@@ -77,16 +73,16 @@ public class Core {
                     System.out.println("Vuelva a ingresar una opción válida");
                     break;
             }
-        } while (exit != true);
+        } while (!exit);
     }
 
 
     public void bringOldUtmToNewUtmValuedInCLP(BaseYear diferenceOfIgcBetweentNewAndOldYearInClp, BaseGeneral baseGeneral, BaseYear ActualValueFinalInClp ){
 
-        int oldClp = 0;
-        double oldUtm = 0;
-        double oldValueInOldUtm = 0;
-        double actualBaseInClpValuedAtTGYear = 0;
+        int oldClp;
+        double oldUtm;
+        double oldValueInOldUtm;
+        double actualBaseInClpValuedAtTGYear;
 
 
         for( int  i = 0; i < 10; i++){
@@ -188,7 +184,7 @@ public class Core {
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
 
-        int data = 0;
+        int data;
 
         for(int i = 0; i < baseGeneral.getYearsToReliq() ; i++ ){
 
@@ -236,7 +232,7 @@ public class Core {
                                                BaseYear baseYearNueva){
 
         int [] evaluatedUtm = new int [10];
-        int yearInEvaluation = 0;
+        int yearInEvaluation;
         double actualUtmPerYear = baseGeneral.getUtmPerYearCalculated();
 
 
@@ -264,7 +260,7 @@ public class Core {
 
     public void calcIgcByYear( BaseYear baseYearNueva, BaseYear recalculatedNewIgcByYear ){
 
-        int actualIgc = 0;
+        int actualIgc;
 
         for(int i = 0; i < 10 ; i++){
 
@@ -289,7 +285,7 @@ public class Core {
 
     public void calcDiferenceOfIgcBetweenNewAndOldBaseYear( BaseYear recalculatedNewIgcByYear, BaseYear recalculatedOldIgcByYear, BaseYear diferenceOfIgcBetweentNewAndOldYear ){
 
-        int diferenceOfIgcCalculated = 0;
+        int diferenceOfIgcCalculated;
 
         for( int i = 0; i < 10; i++){
 
@@ -314,10 +310,6 @@ public class Core {
 
         // TODO : para revisar con el ejercicio del profe double utmTg = 52842;
 
-        double utmTg = 0;
-        int yearTG = baseGeneral.getTgYear();
-
-        //int utmInTgYear = whatUtmIs( yearTG );
         baseGeneral.setUtmTg(52842);
         int utmInTgYear = baseGeneral.getUtmTg();
 
