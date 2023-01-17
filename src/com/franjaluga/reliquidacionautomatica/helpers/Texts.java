@@ -9,7 +9,7 @@ public class Texts {
                 "3....Ingresar periodos a reliquidar\n"+
                 "4....Ingresar bases IGC por año\n"+
                 "5....Chequear Datos (Developer)\n"+
-                "6....Reliquidar bases\n"+
+                "6....Reliquidar IGC por año\n"+
                 "0....Salir de la aplicación\n");
     }
 

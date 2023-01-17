@@ -642,6 +642,7 @@ public class Funciones {
             System.out.println(base +";"+ tasa8+";"+ rebaja8+";"+igc);
 
         }
+
         return igc;
     }
 }
