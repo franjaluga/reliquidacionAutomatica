@@ -19,9 +19,9 @@ public class Core {
         BaseYear baseYearNueva = new BaseYear();
         BaseYear recalculatedNewIgcByYear = new BaseYear();
 
-        BaseYear diferenceOfIgcBetweentNewAndOldYear = new BaseYear();
+        BaseYear diferenceOfIgcBetweentNewAndOldYearInClp = new BaseYear();
 
-        BaseYear diferenceInUTMofOldYearToNewYear = new BaseYear();
+        BaseYear ActualValueFinalInClp = new BaseYear();
 
 
         // TODO: proveniente de...
@@ -66,12 +66,12 @@ public class Core {
                     printIgcByYear( recalculatedNewIgcByYear );
 
                     System.out.println("DIFS IN BASES");
-                    calcDiferenceOfIgcBetweenNewAndOldBaseYear( recalculatedNewIgcByYear, recalculatedOldIgcByYear, diferenceOfIgcBetweentNewAndOldYear );
-                    printDiferenceOfIgcByYearCalculated( diferenceOfIgcBetweentNewAndOldYear );
+                    calcDiferenceOfIgcBetweenNewAndOldBaseYear( recalculatedNewIgcByYear, recalculatedOldIgcByYear, diferenceOfIgcBetweentNewAndOldYearInClp );
+                    printDiferenceOfIgcByYearCalculated( diferenceOfIgcBetweentNewAndOldYearInClp );
                     break;
                 case 7:
-                    calculateDiferenceOfIgcByYearToUtmFromThatYear( diferenceInUTMofOldYearToNewYear , diferenceOfIgcBetweentNewAndOldYear, baseGeneral );
-                    printClpActualByYear(diferenceInUTMofOldYearToNewYear);
+                    bringOldUtmToNewUtmValuedInCLP( diferenceOfIgcBetweentNewAndOldYearInClp, baseGeneral, ActualValueFinalInClp );
+                    printClpActualByYear(ActualValueFinalInClp);
                     break;
                 default:
                     System.out.println("Vuelva a ingresar una opción válida");
@@ -80,6 +80,34 @@ public class Core {
         } while (exit != true);
     }
 
+
+    public void bringOldUtmToNewUtmValuedInCLP(BaseYear diferenceOfIgcBetweentNewAndOldYearInClp, BaseGeneral baseGeneral, BaseYear ActualValueFinalInClp ){
+
+        int oldClp = 0;
+        double oldUtm = 0;
+        double oldValueInOldUtm = 0;
+        double actualBaseInClpValuedAtTGYear = 0;
+
+
+        for( int  i = 0; i < 10; i++){
+
+            oldClp = diferenceOfIgcBetweentNewAndOldYearInClp.getBySlot( i , 0);
+            oldUtm = whatUtmIs( diferenceOfIgcBetweentNewAndOldYearInClp.getBySlot( i,1));
+            oldValueInOldUtm = oldClp / oldUtm;
+
+            actualBaseInClpValuedAtTGYear = oldValueInOldUtm * baseGeneral.getUtmTg();
+
+            ActualValueFinalInClp.setBySlot( i,0, (int) (actualBaseInClpValuedAtTGYear) );
+            ActualValueFinalInClp.setBySlot( i,1, ActualValueFinalInClp.getBySlot(i,1) );
+        }
+    }
+
+    public void printClpActualByYear( BaseYear ActualValueFinalInClp){
+
+        for( int i = 0; i < 10 ; i++ ){
+            System.out.println(ActualValueFinalInClp.getBySlot( i, 0) + " ; " + ActualValueFinalInClp.getBySlot( i , 1));
+        }
+    }
 
     public static void case1(BaseGeneral baseGeneral){
         Texts.printOption1();
@@ -282,57 +310,22 @@ public class Core {
     }
 
 
-
-    public void calculateDiferenceOfIgcByYearToUtmFromThatYear( BaseYear diferenceInUTMofOldYearToNewYear , BaseYear diferenceOfIgcBetweentNewAndOldYear, BaseGeneral baseGeneral ){
-
-        // TODO MEJORAR LA PRESICIÓN, ACTUALMENTE ESTÁ TRABAJANDO CON NUMEROS ENTEROS Y NECESITO DOUBLES
-
-        // llevar la base antigua a su UTM del periodo
-        // la nueva base en UTM se multiplica por la UTM de TG
-        // se setea en el objeto 'diferenceOfIgcByYearToUtmFromThatYear[i][0]'
-        // se setea el año
-
-        double difNewOldInUtmToApply = 0;
-        int difNewOld = 0;
-        int utmToApply = 0;
-
-        for( int  i = 0; i < 10; i++){
-
-            difNewOld = diferenceOfIgcBetweentNewAndOldYear.getBySlot(i,0);
-            utmToApply = whatUtmIs( diferenceOfIgcBetweentNewAndOldYear.getBySlot( i,1));
-
-            difNewOldInUtmToApply = difNewOld / utmToApply;
-
-            double actualBaseInClpValuedAtTGYear = difNewOldInUtmToApply * baseGeneral.getUtmTg() ;
-
-            diferenceInUTMofOldYearToNewYear.setBySlot( i,0, (int) (actualBaseInClpValuedAtTGYear) );
-            diferenceInUTMofOldYearToNewYear.setBySlot( i,1, diferenceInUTMofOldYearToNewYear.getBySlot(i,1) );
-        }
-    }
-
-    public void printClpActualByYear( BaseYear clpActual){
-
-        for( int i = 0; i < 10 ; i++ ){
-            System.out.println(clpActual.getBySlot( i, 0) + " ; " + clpActual.getBySlot( i , 1));
-        }
-    }
-
-
     public double baseToUtmInDateTg(BaseGeneral baseGeneral){
 
-        selectorDeUtm( baseGeneral );
-        double basePp = baseGeneral.getBaseProporcional();
-
-        //double utmTg = baseGeneral.getUtmTg();
-        double utmTg = 52842;
         // TODO : para revisar con el ejercicio del profe double utmTg = 52842;
-        // TODO : para revisar con el ejercicio del s.i.i double utmTg = 54171;
 
-        baseGeneral.setBaseProporcionalEnUtm( basePp / utmTg );
+        double utmTg = 0;
+        int yearTG = baseGeneral.getTgYear();
 
-        double utmTgReturn = baseGeneral.getBaseProporcionalEnUtm();
+        //int utmInTgYear = whatUtmIs( yearTG );
+        baseGeneral.setUtmTg(52842);
+        int utmInTgYear = baseGeneral.getUtmTg();
 
-        return utmTgReturn;
+        int baseTgInClp = baseGeneral.getBase();
+
+        int baseTgInUtm = baseTgInClp / utmInTgYear;
+
+        return baseTgInUtm;
     }
 
 
@@ -392,7 +385,6 @@ public class Core {
                  System.out.println("case default");
                  break;
          }
-        System.out.println("SE USÓ UTM DE ---->" + baseGeneral.getUtmTg());
     }
 
 
