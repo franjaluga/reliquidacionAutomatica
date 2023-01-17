@@ -5,6 +5,7 @@ public class BaseGeneral {
     float porcentajeDeParticipacion;
     int baseProporcional;
     int UtmTg;
+    double utmPerYearCalculated;
     double baseproporcionalEnClp;
     double baseProporcionalEnUtm;
     int tgMonth;
@@ -20,6 +21,7 @@ public class BaseGeneral {
         this.porcentajeDeParticipacion = 0;
         this.baseProporcional = 0;
         this.UtmTg = 0;
+        this.utmPerYearCalculated = 0;
         this.baseproporcionalEnClp = 0;
         this.baseProporcionalEnUtm = 0;
         this.tgMonth = 0;
@@ -68,6 +70,14 @@ public class BaseGeneral {
 
     public void setUtmTg(int utmTg) {
         UtmTg = utmTg;
+    }
+
+    public double getUtmPerYearCalculated() {
+        return utmPerYearCalculated;
+    }
+
+    public void setUtmPerYearCalculated(double utmPerYearCalculated) {
+        this.utmPerYearCalculated = utmPerYearCalculated;
     }
 
     public double getBaseProporcionalEnUtm() {

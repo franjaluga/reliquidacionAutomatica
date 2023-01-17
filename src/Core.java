@@ -1,4 +1,5 @@
 import com.franjaluga.reliquidacionautomatica.constantes.UnidadesTributariasMensuales;
+import com.franjaluga.reliquidacionautomatica.helpers.Texts;
 
 import java.util.Scanner;
 
@@ -11,7 +12,6 @@ public class Core {
         // TODO: Reemplazar hacia...
         BaseGeneral baseGeneral = new BaseGeneral();
         BaseYear baseYearAntigua = new BaseYear();
-        BaseYear aditionByYearInUtm = new BaseYear();
         BaseYear aditionByYearInClp = new BaseYear();
         BaseYear baseYearNueva = new BaseYear();
 
@@ -20,7 +20,7 @@ public class Core {
         Libro libro = new Libro();
 
         do {
-            printMenu();
+            Texts.printMenu();
             Scanner scanConsoleUserResponse = new Scanner(System.in);
             int consoleUserMenuResponse;
 
@@ -28,7 +28,7 @@ public class Core {
 
             switch (consoleUserMenuResponse) {
                 case 0:
-                    printOption0();
+                    Texts.printOption0();
                     exit = true;
                     break;
                 case 1:
@@ -44,8 +44,13 @@ public class Core {
                     case4(baseGeneral, baseYearAntigua);
                     break;
                 case 5:
+                    printUtmToTgDate( baseGeneral );
+                    printUtmPerYearInUtm( baseGeneral );
+                    printClpPerYearFromUtmPerYear ( baseGeneral, baseYearAntigua, baseYearNueva );
+
+                case 6:
+
                     case5(baseGeneral,
-                            aditionByYearInUtm,
                             aditionByYearInClp,
                             baseYearNueva);
                     break;
@@ -56,35 +61,9 @@ public class Core {
         } while (exit != true);
     }
 
-    public void printMenu(){
-        System.out.println("========== INICIO ==========\n"+
-                "1....Ingresar base de TG a reliquidar\n"+
-                "2....Ingresar participación del socio o accionista, en la base\n"+
-                "3....Ingresar periodos a reliquidar\n"+
-                "4....Ingresar bases IGC por año\n"+
-                "5....Reliquidar bases\n"+
-                "0....Salir de la aplicación\n");
-    }
 
-    public void printOption0(){
-        System.out.println("Ha salido de la aplicación");
-    }
-
-    public void printOption1(){
-        System.out.println("Ingrese base de TG de la empresa (corresponde al 100%)");
-    }
-
-    public void printOption2(){
-        System.out.println("Ingrese el porcentaje de participación del socio o accionista"+
-                "\nPor ejemplo: 40% debe anotarlo como 0.40");
-    }
-
-    public void printOption5(){
-        System.out.println("Reporte final de reliquidación");
-    }
-
-    public void case1(BaseGeneral baseGeneral){
-        printOption1();
+    public static void case1(BaseGeneral baseGeneral){
+        Texts.printOption1();
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
         int subConsoleUserMenuResponse = Integer.parseInt(scanSubConsoleUserResponse.nextLine());
 
@@ -93,8 +72,9 @@ public class Core {
 
     }
 
+
     public void case2(BaseGeneral baseGeneral){
-        printOption2();
+        Texts.printOption2();
 
         Scanner scanSubConsoleUserResponse = new Scanner(System.in);
         float subConsoleUserMenuResponse = Float.parseFloat(scanSubConsoleUserResponse.nextLine());
@@ -115,14 +95,14 @@ public class Core {
         System.out.println("Ingrese el 'MES' de TERMINO DE GIRO\n (Ejemplo: Enero : 1 ; Febrero : 2, Diciembre: 12");
         baseGeneral.setTgMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
-        System.out.println("Ingrese el 'AÑO TRIBUTARIO' de TERMINO DE GIRO: ");
+        System.out.println("Ingrese el 'AÑO COMERCIAL' de TERMINO DE GIRO: ");
         baseGeneral.setTgYear( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
         System.out.println("Ingrese el 'MES' en que ADQUIRIÓ las acciones o derechos\n (Ejemplo: Enero : 1 ; Febrero : 2, Diciembre: 12");
         baseGeneral.setInitMonth( Integer.parseInt( scanSubConsoleUserResponse.nextLine() ) );
 
         System.out.println("Ingrese el 'AÑO COMERCIAL' en que ADQUIRIÓ las acciones o derechos:");
-        baseGeneral.setInitYear( Integer.parseInt(scanSubConsoleUserResponse.nextLine()) + 1 );
+        baseGeneral.setInitYear( Integer.parseInt(scanSubConsoleUserResponse.nextLine()) );
 
         System.out.println("|---------------------------------------|");
         System.out.println("  se ocupará mes/año (inicial): " + baseGeneral.getInitMonth() + "/" + baseGeneral.getInitYear() );
@@ -134,7 +114,7 @@ public class Core {
             baseGeneral.setYearsMaxToReliq(10);
             baseGeneral.setInitYear(baseGeneral.getTgYear()-10);
         }else{
-            baseGeneral.setYearsMaxToReliq( ( baseGeneral.getTgYear() -1 ) - (baseGeneral.getInitYear()) + 1 );
+            baseGeneral.setYearsMaxToReliq( ( baseGeneral.getTgYear() ) - ( baseGeneral.getInitYear() )  + 1 );
         }
 
         if(baseGeneral.getYearsMaxToReliq() <= 0){
@@ -153,8 +133,8 @@ public class Core {
         }
 
         System.out.println("Ingresó "+ baseGeneral.getYearsToReliq() + " años a reliquidar");
-
     }
+
 
 
     public void case4(BaseGeneral baseGeneral, BaseYear baseYearAntigua){
@@ -165,7 +145,7 @@ public class Core {
 
         for(int i = 0; i < baseGeneral.getYearsToReliq() ; i++ ){
 
-            System.out.println("Ingrese Base imponible año: "+ ( baseGeneral.getInitYear() + i ) );
+            System.out.println("Ingrese Base imponible AT: "+ ( baseGeneral.getInitYear() + i + 1 ) );
 
             data =  Integer.parseInt( scanSubConsoleUserResponse.nextLine() );
 
@@ -186,48 +166,89 @@ public class Core {
     }
 
 
+    public void printUtmToTgDate( BaseGeneral baseGeneral ){
+
+        Texts.printOption5();
+        System.out.println("La base convertida a UTM, al valor de la fecha de TG: " + baseToUtmInDateTg( baseGeneral ) );
+
+    }
 
 
+    public void printUtmPerYearInUtm( BaseGeneral baseGeneral ){
+
+        double utmPerYearCalculated = howMuchUtmIsPerYear( baseGeneral );
+
+        baseGeneral.setUtmPerYearCalculated(utmPerYearCalculated);
+        System.out.println("La base que se agrega por año (en UTM) es: " + baseGeneral.getUtmPerYearCalculated() );
 
 
-
-
-
-
+    }
 
     // TODO: DESDE AQUI HACIA ABAJO, DEBE REFACTORIZAR EN LAS CLASES NUEVAS
 
 
+    public void printClpPerYearFromUtmPerYear( BaseGeneral baseGeneral,
+                                               BaseYear baseYearAntigua,
+                                               BaseYear baseYearNueva){
+
+        int [] evaluatedUtm = new int [10];
+        int yearInEvaluation = 0;
+
+        double actualUtmPerYear = baseGeneral.getUtmPerYearCalculated();
+
+        for( int i = 0; i < 10; i++){
+            yearInEvaluation = baseYearAntigua.getBySlot( i , 1);
+            evaluatedUtm[i] = whatUtmIs(yearInEvaluation);
+        }
+
+        for( int i = 0; i < 10; i++){
+
+            int convertido = (int) ( ( evaluatedUtm[i] * actualUtmPerYear ) );
+
+            int suma = convertido + baseYearAntigua.getBySlot( i , 0 );
+
+            baseYearNueva.setBySlot( i , 0, suma );
+
+        }
+
+        for( int i = 0; i < 10 ; i++ ){
+
+            System.out.println(baseYearNueva.getBySlot( i, 0) + "-> " + baseYearNueva.getBySlot( i , 1));
+
+        }
+
+    }
+
+
+
+
+
+
+
+    public void setAditionByYearInClp( BaseGeneral baseGeneral,
+                                       BaseYear aditionByYearInClp,
+                                       BaseYear baseYearNueva) {
+
+
+        // aditionByYearInUtm(baseGeneral.getUtmPerYearCalculated(), aditionByYearInClp, baseYearNueva);
+
+    }
+
+
+
+
+
+
     public void case5(BaseGeneral baseGeneral,
-                      BaseYear aditionByYearInUtm,
                       BaseYear aditionByYearInClp,
                       BaseYear baseYearNueva){
 
-        printOption5();
 
-        // 3. La base de TG se convierte (aquella porción que me corresponde) a UTM, desde la fecha del TG
-
-        System.out.println("Base a UTM a la fecha del TG: " + baseToUtmInDateTg( baseGeneral ) );
-
-        // cuantas UTM son por año?
-        howMuchUtmIsPerYear( baseGeneral );
-
-
-        // 4. Las UTMS/años reliqu. , se devengan parceladamente en cada año anterior "SE RETROTRAEN" a sus valores UTM de cierre de dicho año al cierre
-
-        // TODO: Dividir el trabajo:
-        // 1. Agregar en 'aditionByYearInUtm', las valorizaciones a UTM asociado a su año
-        // 2. Generar el nuevo array 'aditionByYearInClp' recibiendo las UTM de 'aditionByYearInUtm' y convirtiéndolas a peso
-        // 3. Una vez tenga 'aditionByYearInClp', sumar en el nuevo array ''
-
-
-        addUtmToBaseRecalc( baseGeneral, baseYearAntigua, baseYearAntiguaPlusUtmInCLPOfYear );
+        //addUtmToBaseRecalc( baseGeneral, baseYearAntigua, baseYearAntiguaPlusUtmInCLPOfYear );
 
 
         /****
          *
-
-
 
         // 5. Recalculamos el IGC por año, sin perder la huella anterior
             // necesitamos el IGC anterior
@@ -303,6 +324,8 @@ public class Core {
 
 
     }
+
+
 
 
     public double baseToUtmInDateTg(BaseGeneral baseGeneral){
@@ -383,13 +406,45 @@ public class Core {
     }
 
 
-    public void howMuchUtmIsPerYear(BaseGeneral baseGeneral){
+    public void setAditionByYearInClp(double utmPerYearCalculated, BaseYear aditionByYearInUtm, BaseYear baseYearNueva) {
+
+        setAditionByYearFromUtmToClp( utmPerYearCalculated , aditionByYearInUtm, baseYearNueva );
+
+    }
+
+
+    public void setAditionByYearFromUtmToClp( double utmPerYearCalculated, BaseYear aditionByYearInUtm, BaseYear baseYearNueva){
+
+        int year = 2022;
+        int aditionConvertedInClp = 0;
+        int utmToUse = 0;
+
+        for(int i = 0; i < 10; i++){
+
+            year = aditionByYearInUtm.getBySlot( i, 1 );
+
+            utmToUse = whatUtmIs(year);
+
+            aditionConvertedInClp = (int) ( utmPerYearCalculated * utmToUse );
+
+            aditionByYearInUtm.setBySlot( i, 0, baseYearNueva.getBySlot( i , 0) + aditionConvertedInClp);
+            aditionByYearInUtm.setBySlot( i, 1, year);
+
+        }
+
+    }
+
+
+
+    public double howMuchUtmIsPerYear(BaseGeneral baseGeneral){
+        String data;
+
         // visualizar cuanto queda por año
         double basePorYearToReliq = baseToUtmInDateTg( baseGeneral ) / baseGeneral.getYearsToReliq();
 
         baseGeneral.setBaseproporcionalEnClp( basePorYearToReliq );
 
-        System.out.println("Entonces, por año serían: " + basePorYearToReliq );
+        return basePorYearToReliq;
     }
 
 
@@ -661,44 +716,44 @@ public class Core {
         System.out.println(libro.diferenciaDeBases[9]);
     }
 
-    public double whatUtmIs(int data){
+    public int whatUtmIs(int year){
         int utmCorrecta = 1;
 
-        if(data != 0 ){
-            if(data == 2011){
+        if(year != 0 ){
+            if(year == 2011){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2010.getUtm();
             }
-            if(data == 2012){
+            if(year == 2012){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2011.getUtm();
             }
-            if(data == 2013){
+            if(year == 2013){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2012.getUtm();
             }
-            if(data == 2014){
+            if(year == 2014){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2013.getUtm();
             }
-            if(data == 2015){
+            if(year == 2015){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2014.getUtm();
             }
-            if(data == 2016){
+            if(year == 2016){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2015.getUtm();
             }
-            if(data == 2017){
+            if(year == 2017){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2016.getUtm();
             }
-            if(data == 2018){
+            if(year == 2018){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2017.getUtm();
             }
-            if(data == 2019){
+            if(year == 2019){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2018.getUtm();
             }
-            if(data == 2020){
+            if(year == 2020){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2019.getUtm();
             }
-            if(data == 2021){
+            if(year == 2021){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2020.getUtm();
             }
-            if(data == 2022){
+            if(year == 2022){
                 utmCorrecta = UnidadesTributariasMensuales.UTM_DIC_2021.getUtm();
             }
         }

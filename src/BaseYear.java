@@ -19,4 +19,5 @@ public class BaseYear {
     public int getBySlot(int indexOne, int indexTwo){
         return this.base[indexOne][indexTwo];
     }
+
 }
